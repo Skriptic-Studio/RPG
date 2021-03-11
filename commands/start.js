@@ -87,8 +87,8 @@ module.exports={
 						else{
 							if(m=='1'){
 								setup = 'melee';
-								message.channel.send(melee).then(()=>{
-									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+								message.channel.send(melee).then(async()=>{
+									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
 
 									if(!parseInt(m2))message.channel.send('invalid');
@@ -103,6 +103,7 @@ module.exports={
 										userO.accuracy = 8;
 										userO.range = 2;
 										userO.speed = 7;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '2'){//machete/dart/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as meelee type using a machete!")
@@ -115,6 +116,7 @@ module.exports={
 										userO.accuracy = 8;
 										userO.range = 2;
 										userO.speed = 4;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//spear/slingshot/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as meelee type using a spear!")
@@ -127,10 +129,11 @@ module.exports={
 										userO.accuracy = 7;
 										userO.range = 4;
 										userO.speed = 3;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 
 									}).catch(collected => {
-										if(m2.size == 0){
+										if(collected.size == 0){
 											cancelled = true;
 											message.channel.send("You didn't answer in time!")
 										}
@@ -139,8 +142,8 @@ module.exports={
 							}
 							else if(m=='2'){
 								setup = 'ranged'
-								message.channel.send(ranged).then(()=>{
-									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+								message.channel.send(ranged).then(async()=>{
+									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
 
 									if(!parseInt(m2))message.channel.send('invalid');
@@ -155,6 +158,7 @@ module.exports={
 										userO.accuracy = 4;
 										userO.range = 11;
 										userO.speed = 4;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '2'){//machete/slingshot/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as ranged type using Slingshot!")
@@ -167,6 +171,7 @@ module.exports={
 										userO.accuracy = 4;
 										userO.range = 10;
 										userO.speed = 6;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//axe/dart/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as ranged type using a Dart!")
@@ -179,10 +184,11 @@ module.exports={
 										userO.accuracy = 3;
 										userO.range = 10;
 										userO.speed = 6;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									}).catch(collected => {
-										if(m2.size == 0){
-											cance
+										if(collected.size == 0){
+											//cance
 											message.channel.send("You didn't answer in time!")
 										}
 									})
@@ -190,8 +196,8 @@ module.exports={
 							}
 							else{
 								setup = 'mage'
-								message.channel.send(mage).then(()=>{
-									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+								message.channel.send(mage).then(async()=>{
+									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
 
 									if(!parseInt(m2))message.channel.send('invalid');
@@ -206,6 +212,7 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 8;
 										userO.speed = 4;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '2'){//machete/dart/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as mage type using a staff!")
@@ -218,6 +225,7 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 9;
 										userO.speed = 1;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//axe/slingshot/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as mage type using a magic gloves!")
@@ -230,10 +238,11 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 6;
 										userO.speed = 4;
+										await userDb.set(`user - ${message.author.id}`, userO);
 									}
 
-									}).catch(collected => {
-										if(m2.size == 0){
+									}).catch(async collected => {
+										if(collected.size == 0){
 											return message.channel.send("You didn't answer in time!")
 										}
 									})
@@ -246,7 +255,7 @@ module.exports={
 
 					else if(cancelled){return message.channel.send("Proccess Cancelled, invalid answer provided");}
 				})
-				if(!cancelled)
+				if(!cancelled){}
 					await usersDb.set(`user - ${message.author.id}`, userO);
 				});
 

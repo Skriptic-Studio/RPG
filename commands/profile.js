@@ -16,7 +16,11 @@ module.exports={
 		let embed = new Discord.MessageEmbed()
 		.setTitle(`${target.username}#${target.discriminator}`)
 		.setColor('#FFFF00')
+		.setThumbnail(message.author.avatarURL())
+		.addField('Type: ', `${userO.type}`)
+		.addField('Weapon: ', `${userO.weapon}`)
 		.addField('Level: ', `${userO.level} (${userO.xp+'/'+(Math.pow(userO.level*2, 2)+'xp')})`)
+		.addField('Coins: ', `${userO.coins}`)
 		
 		message.channel.send(embed);
   }
