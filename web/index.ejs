@@ -1,0 +1,70 @@
+<html>
+<head>
+	<title>RPG - Insanyngame</title>
+	<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+ margin: 0px;
+}
+
+#nav{
+	margin: 0;
+	padding: 0;
+	background-color: greenyellow;
+	top: 0px;
+	height: 50px; width: 100%;
+	position: fixed;
+	overflow: hidden;
+	padding-right: 0px; padding-left: 0px;
+}
+
+#nav a{
+	margin: 0;
+	float: left;
+  padding: 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 17px;
+  width: 15%;
+  text-align: center;
+	transition: background-color 0.5s;
+}
+
+#nav a:hover{
+	background-color: green;
+	margin: 0;
+	float: left;
+  padding: 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 17px;
+  width: 15%;
+  text-align: center;
+}
+
+#PS{
+top: 50px
+}
+	</style>
+</head>
+
+<body>
+	<div id = 'nav'>
+		<ul>
+			<li><a href = "">Home</a></li>
+		</ul>
+	</div>
+
+	<div id = "PS">
+		<form action="/test" method="post">
+			<input type="password" name="password" id="password" placeholder="Password">
+  	  <input type="submit" value="Submit">
+		</form>
+	</div>
+</body>
+</html>

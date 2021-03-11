@@ -1,0 +1,41 @@
+<html>
+
+<head>
+	<!-- You MUST include jQuery before Fomantic -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+	<script>
+	$('select.dropdown')
+  .dropdown('set selected', ['meteor', 'ember'])
+	;
+	</script>
+	
+	<title>404</title>
+	<style>
+h1{
+	color:red
+}
+	</style>
+</head>
+
+<body>
+<div class="ui three buttons">
+  <button class="ui active button">One</button>
+  <button class="ui button">Two</button>
+  <button class="ui button">Three</button>
+</div>
+
+<select name="skills" multiple="" class="ui fluid dropdown">
+  <option value="">Skills</option>
+  <option value="angular">Angular</option>
+  <option value="css">CSS</option>
+  <option value="ember">Ember</option>
+  <option value="html">HTML</option>
+  <option value="javascript">Javascript</option>
+  <option value="meteor">Meteor</option>
+  <option value="node">NodeJS</option>
+</select>
+	<h1>Error: 404 Not Found</h1>	
+</body>
+</html>
