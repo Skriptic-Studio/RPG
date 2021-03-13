@@ -13,8 +13,8 @@ module.exports={
 				{ name: 'Bot Version', value: '0.0.1' },
 				{ name: 'Guild Count', value: `${client.guilds.cache.size}`, inline: true },
 				{ name: 'Ping', value: `${Date.now() - message.createdTimestamp}`, inline: true },
-				{ name: 'Main Developer', value: '<@793963605682552862>'},
-				{ name: 'Secondary Developer', value: '<@460429419404853248>'},
+				{ name: 'Developers', value: '<@793963605682552862>\n<@460429419404853248>'},
+				{ name: 'Graphic Designer', value: '<@336669775964930050>'},
 			)
 			.setFooter("By Skriptic Studio", "https://media.discordapp.net/attachments/790916584168226856/800417826393292870/sks.png")
       

@@ -15,7 +15,7 @@ module.exports={
 		const userO = await userDb.get(`user - ${message.author.id}`);
 
 		const prefix = (await mainDb.get(`prefix - ${message.guild.id}`)||'r.');
-		let embed = Discord.MessageEmbed();
+		let embed = new Discord.MessageEmbed();
 
 		/*general---------------------------------*/
 
@@ -38,8 +38,8 @@ module.exports={
 			else{
 				if(level>currentLevel){
 					if (level==currentLevel+1)
-						message.channel.send("You leveled up!");
-					else message.channel.send(`WOW! You leveled up ${level-currentLevel} times!`);
+						message.reply("You leveled up!");
+					else message.reply(`WOW! You leveled up ${level-currentLevel} times!`);
 				}
 			}
 			currentLevel = level;
@@ -86,9 +86,9 @@ module.exports={
 					break;
 				}
 			}
-			message.channel.send( new Discord.MessageEmbed()
+			message.reply( new Discord.MessageEmbed()
 				.setTitle('Training your Accuracy!')
-				.setDescription(`Answer the position of the animal\n${accEmojis.join("")}`)
+				.setDescription(`<@${message.author.id}>, Answer the position of the animal\n${accEmojis.join("")}`)
 				.setFooter('You have 10 seconds for 3 awsners')
 			);	
 		}
@@ -106,8 +106,8 @@ module.exports={
 			let emojisPos = randArray(numberMind);
 			let correct = [];
 			let correctNum = [];
-			embed.setTitle("Training your Mind!").setDescription(`Answer with the order of the position of the numbers\n${emojisPos.join("")}`).setFooter("Separate the numbers with space. Example: 5 1 3 4 2");
-			message.channel.send(embed);
+			embed.setTitle("Training your Mind!").setDescription(`<@${message.author.id}>, Answer with the order of the position of the numbers\n${emojisPos.join("")}`).setFooter("Separate the numbers with space. Example: 5 1 3 4 2");
+			message.reply(embed);
 			for(let i = 0; i<emojisPos.length; i++){
 				switch(emojisPos[i]){
 					case ':one:':
@@ -153,18 +153,18 @@ module.exports={
 			let collector = message.channel.createMessageCollector(filter, { time: 10000, max: 1 });
 			collector.on('collect', m => {
 				if(m.content==correctNum.join(" ")){
-					message.channel.send(`Correct!\n You got ${6*userO.level}xp!`);
+					message.reply(`Correct!\n You got ${6*userO.level}xp!`);
 					currentExperience += 6*userO.level;
 					checkLevelUp();
 				}
 				else{
-					message.channel.send("Wrong answer!");
+					message.reply("Wrong answer!");
 				}
 			});
 
 			collector.on('end', collected => {
 				if(collected.size==0)
-					message.channel.send("You didn't answer in time!")
+					message.reply("You didn't answer in time!")
 			});
 		}
 
@@ -172,8 +172,8 @@ module.exports={
 		function letterQuantityMind() {
 			let currentPhrase = letterQuantityMindPhrases[Math.floor(letterQuantityMindPhrases.length * Math.random())];
 
-			embed.setTitle('Training your Mind!').setDescription(`Quick! Count each letter of the phrase below and write it!\n${currentPhrase}`).setFooter('You have 10 seconds to count it!');
-			message.channel.send(embed);
+			embed.setTitle('Training your Mind!').setDescription(`<@${message.author.id}>, Quick! Count each letter of the phrase below and write it!\n${currentPhrase}`).setFooter('You have 10 seconds to count it!');
+			message.reply(embed);
 
 			let quantityChar = currentPhrase.split(" ").join("").length;
 
@@ -182,26 +182,26 @@ module.exports={
 
 			letterQuantityMindCollector.on('collect', async(m, user) => {
 				if(m.content == quantityChar) {
-					message.channel.send("Correct!");
+					message.reply("Correct!");
 					correct = true;
 				}
 				else {
-					message.channel.send("Wrong Answer!")
+					message.reply("Wrong Answer!")
 					correct = false;
 				}
 			});
 
 			letterQuantityMindCollector.on('end', collected => {
 				if(!collected.size){
-					message.channel.send("You didn't answer in time!")
-					message.channel.send("You got 0xp!");
+					message.reply("You didn't answer in time!")
+					message.reply("You got 0xp!");
 				}
 				if(correct) {
-					message.channel.send(`You got ${3*2*userO.level} xp!`);
+					message.reply(`You got ${3*2*userO.level} xp!`);
 					currentExperience += 3*2*userO.level;
 					checkLevelUp();
 				}
-				else message.channel.send("You got 0 xp!");
+				else message.reply("You got 0 xp!");
 			});
 		}
 
@@ -219,23 +219,23 @@ module.exports={
 			ePosStr = (ePos==0?'left':(ePos==1?'middle':'right'));
 			let map = ['🔳','🔳','🔳']
 			map[ePos] = '👾';
-			embed.setTitle('Training your Defense!').setDescription(`Answer with the position(Left/Right/Middle) the enemy(👾) to defend it!\n\n${map.join("")}`).setFooter(`${left} defense left!`);
-			message.channel.send(embed).then(async() => {
+			embed.setTitle('Training your Defense!').setDescription(`<@${message.author.id}>, Answer with the position(Left/Right/Middle) the enemy(👾) to defend it!\n\n${map.join("")}`).setFooter(`${left} defense left!`);
+			message.reply(embed).then(async() => {
 				message.channel.awaitMessages(filter, { max: 1, time: 3000, errors: ['time'] }).then(collected => {
 
 				if(collected.first().content==ePosStr)
-					message.channel.send("You defended!");
-				else {message.channel.send("You missed the enemy and didn't got any xp."); left=-1;}
+					message.reply("You defended!");
+				else {message.reply("You missed the enemy and didn't got any xp."); left=-1;}
 
 				if(left>1)
 					def(left-1);
 				else if(left==1)
-					message.channel.send(`You won ${6*userO.level+1}xp!`);
+					message.reply(`You won ${6*userO.level+1}xp!`);
 					currentExperience += 6*userO.level+1;
 					checkLevelUp('defense');
 			}).catch(collected => {
 				if(collected.size==0)
-					return message.channel.send(`You didn't answer in time and the enemy got you!`);
+					return message.reply(`You didn't answer in time and the enemy got you!`);
 			})
 			})
 		}
@@ -248,31 +248,31 @@ module.exports={
 			let filter = m => m.author.id == message.author.id;
 			hyp = Math.ceil(Math.random()*10);
 			correct = '';
-			embed.setTitle('Training your Range!').setDescription(`Type hyphen(-) ${hyp} times and then add a greater than(>) symbol after it!`);
+			embed.setTitle('Training your Range!').setDescription(`<@${message.author.id}>, Type hyphen(-) ${hyp} times and then add a greater than(>) symbol after it!`);
 
 			for(let i = 0; i<hyp; i++){
 				correct += '-';
 			}
 			correct+='>';
 
-			message.channel.send(embed).then(async() => {
+			message.reply(embed).then(async() => {
 				message.channel.awaitMessages(filter, { max: 1, time: 3000, errors: ['time'] }).then(collected => {
 
 				if(collected.first().content==correct){
-					message.channel.send("You got it!");
+					message.reply("You got it!");
 					rangeWonXp+=1;
 				}
-				else message.channel.send("Your range wasn't the exact long and you missed it...");
+				else message.reply("Your range wasn't the exact long and you missed it...");
 
 				if(left>1) range(left-1);
 				
 				else if(left==1)
-					message.channel.send(`You won ${rangeWonXp}xp!`);
+					message.reply(`You won ${rangeWonXp}xp!`);
 					currentExperience += rangeWonXp;
 					checkLevelUp('range');
 			}).catch(collected => {
 				if(collected.size==0)
-					return message.channel.send(`You didn't answer in time!`);
+					return message.reply(`You didn't answer in time!`);
 			})
 			})
 		}
@@ -290,13 +290,13 @@ module.exports={
 				if(randXp==0)
 						numberXp();
 				else if(randXp==1){
-					embed.setTitle('Training your Mind!').setDescription('Quick! React the :brain: emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji');
+					embed.setTitle('Training your Mind!').setDescription(`<@${message.author.id}>, Quick! React the :brain: emoji as many times as you can!`).setFooter('You have 5 seconds to react the emoji');
 
 					let filterMind = (reaction, user) => {
 						return reaction.emoji.name === '🧠' && user.id === message.author.id;
 					};
 
-					let mMind = await message.channel.send(embed)
+					let mMind = await message.reply(embed)
 					mMind.react("🧠");
 					let collectedAmountMind = 0;
 					let collectorMind = mMind.createReactionCollector(filterMind, { time: 5000 });
@@ -306,7 +306,7 @@ module.exports={
 					});
 
 					collectorMind.on('end', collected => {
-						message.channel.send(`You got ${collectedAmountMind*userO.level} xp!`);
+						message.reply(`You got ${collectedAmountMind*userO.level} xp!`);
 						currentExperience += collectedAmountMind*userO.level;
 						checkLevelUp();
 					});
@@ -322,13 +322,13 @@ module.exports={
 				if(randXp==0)
 						numberXp();
 				else if(randXp==1){
-					embed.setTitle('Training your Mind!').setDescription('Quick! React the :brain: emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji');
+					embed.setTitle('Training your Mind!').setDescription(`<@${message.author.id}>, Quick! React the :brain: emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
 
 					let filterMind = (reaction, user) => {
 						return reaction.emoji.name === '🧠' && user.id === message.author.id;
 					};
 
-					let mMind = await message.channel.send(embed)
+					let mMind = await message.reply(embed)
 					mMind.react("🧠");
 					let collectedAmountMind = 0;
 					let collectorMind = mMind.createReactionCollector(filterMind, { time: 5000 });
@@ -338,7 +338,7 @@ module.exports={
 					});
 
 					collectorMind.on('end', collected => {
-						message.channel.send(`You got ${collectedAmountMind*userO.level} xp!`);
+						message.reply(`You got ${collectedAmountMind*userO.level} xp!`);
 						currentExperience += collectedAmountMind*userO.level;
 						checkLevelUp();
 					});
@@ -350,13 +350,13 @@ module.exports={
 				currentExperience = userO.attackXp;
 				currentLevel = userO.attackLevel;
 				level = currentLevel;
-				embed.setTitle('Training your Attack!').setDescription('Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji');
+				embed.setTitle('Training your Attack!').setDescription(`<@${message.author.id}>, Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
 
 				let filterAtk1 = (reaction, user) => {
 					return reaction.emoji.name === '⚔️' && user.id === message.author.id;
 				};
 
-				let mAtk1 = await message.channel.send(embed)
+				let mAtk1 = await message.reply(embed)
 				mAtk1.react("⚔️");
 				let collectedAmountAtk1 = 0;
 				let collectorAtk1 = mAtk1.createReactionCollector(filterAtk1, { time: 5000 });
@@ -366,7 +366,7 @@ module.exports={
 				});
 				
 				collectorAtk1.on('end', collected => {
-					message.channel.send(`You got ${collectedAmountAtk1*userO.attackLevel} xp!`);
+					message.reply(`You got ${collectedAmountAtk1*userO.attackLevel} xp!`);
 					currentExperience += collectedAmountAtk1*userO.attackLevel;
 	
 					checkLevelUp('attack');			
@@ -376,12 +376,12 @@ module.exports={
 				currentExperience = userO.attackXp;
 				currentLevel = userO.attackLevel;
 				level = currentLevel;
-				embed.setTitle('Training your Attack!').setDescription('Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji');
+				embed.setTitle('Training your Attack!').setDescription(`<@${message.author.id}>, Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
 				let filterAtk2 = (reaction, user) => {
 					return reaction.emoji.name === '⚔️' && user.id === message.author.id;
 				};
 
-				let mAtk2 = await message.channel.send(embed)
+				let mAtk2 = await message.reply(embed)
 				mAtk2.react("⚔️");
 				let collectedAmountAtk2 = 0;
 				let collectorAtk2 = mAtk2.createReactionCollector(filterAtk2, { time: 5000 });
@@ -391,7 +391,7 @@ module.exports={
 				});
 				
 				collectorAtk2.on('end', collected => {
-					message.channel.send(`You got ${collectedAmountAtk2*userO.attackLevel} xp!`);
+					message.reply(`You got ${collectedAmountAtk2*userO.attackLevel} xp!`);
 					currentExperience += collectedAmountAtk2*userO.attackLevel;
 	
 					checkLevelUp('attack');			
@@ -423,10 +423,10 @@ module.exports={
 					accRounds++;
 					if(m.content == accRabbitNumber) {
 						accCollectedAmount++;
-						message.channel.send('Correct!');
+						message.reply('Correct!');
 					}
 					else {
-						message.channel.send('Wrong answer!')
+						message.reply('Wrong answer!')
 					}
 					if(accRounds < 3) {
 						await accFunction();
@@ -435,14 +435,14 @@ module.exports={
 
 				collectorAccuracy.on('end', collected => {
 					if(accCollectedAmount == 0) {
-						message.channel.send("You didn't answer in time!");
+						message.reply("You didn't answer in time!");
 					}
-					else if(accCollectedAmount != 3) {
-						message.channel.send("Time's Up!");
+					else if(accCollectedAmount != '3') {
+						message.reply("Time's Up!");
 					}
 					accRabbitNumber = null;
 					accRounds = 0;
-					message.channel.send(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
+					message.reply(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
 					currentExperience += accCollectedAmount*2*userO.accuracyLevel;
 	
 					checkLevelUp('accuracy');		
@@ -462,10 +462,10 @@ module.exports={
 					accRounds++;
 					if(m.content == accRabbitNumber) {
 						accCollectedAmount++;
-						message.channel.send('Correct!');
+						message.reply('Correct!');
 					}
 					else {
-						message.channel.send('Wrong anwer!')
+						message.reply('Wrong anwer!')
 					}
 					if(accRounds < 3) {
 						await accFunction();
@@ -474,14 +474,14 @@ module.exports={
 
 				collectorAcc.on('end', collected => {
 					if(accCollectedAmount == 0) {
-						message.channel.send("You didn't answer in time!");
+						message.reply("You didn't answer in time!");
 					}
 					else if(accCollectedAmount != 3) {
-						message.channel.send("Time's Up!");
+						message.reply("Time's Up!");
 					}
 					accRabbitNumber = null;
 					accRounds = 0;
-					message.channel.send(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
+					message.reply(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
 					currentExperience += accCollectedAmount*2*userO.accuracyLevel;
 	
 					checkLevelUp('accuracy');
@@ -492,7 +492,7 @@ module.exports={
 				currentExperience = userO.speedXp;
 				currentLevel = userO.speedLevel;
 				level = currentLevel;
-				embed.setTitle('Training your Speed!').setDescription('Quick! Follow the instructions below!').setFooter('You have 10 seconds to type 3 words!');
+				embed.setTitle('Training your Speed!').setDescription(`<@${message.author.id}>, Quick! Follow the instructions below!`).setFooter('You have 10 seconds to type 3 words!');
 				let palavra1 = spdWords[Math.floor(Math.random()*spdWords.length)];
 
 				const filterSpeed = m => m.author.id==message.author.id;
@@ -500,7 +500,7 @@ module.exports={
 				const collectorSpeed = message.channel.createMessageCollector(filterSpeed, { time: 10000, max: 3 });
 
 				let mSpeed = await message.channel.send(embed)
-				message.channel.send(`Type \`${palavra1}\``)
+				message.reply(`Type \`${palavra1}\``)
 				let collectedAmountSpeed = 0;
 
 				let collected1=0;
@@ -509,25 +509,25 @@ module.exports={
 					collected1++;
 					if(m.content == palavra1){
 						collectedAmountSpeed++;
-						message.channel.send("Correct!")
+						message.reply("Correct!")
 					}
 					else{
 						message.reply("wrong word!")
 					}
 					if(collected1!=3){
 						palavra1 = spdWords[Math.floor(Math.random()*spdWords.length)];
-						message.channel.send("Now type `"+palavra1+'`!');
+						message.reply("Now type `"+palavra1+'`!');
 					}
 				});
 				
 				collectorSpeed.on('end', collected => {
 					if(collectedAmountSpeed == 0) {
-						message.channel.send("You didn't answer in time!");
+						message.reply("You didn't answer in time!");
 					}
 					else if(collectedAmountSpeed != 3) {
-						message.channel.send("Time's Up!");
+						message.reply("Time's Up!");
 					}
-					message.channel.send(`You got ${collectedAmountSpeed*2*userO.speedLevel} xp!`);
+					message.reply(`You got ${collectedAmountSpeed*2*userO.speedLevel} xp!`);
 					currentExperience += collectedAmountSpeed*2*userO.speedLevel;
 	
 					checkLevelUp('speed');			
@@ -538,7 +538,7 @@ module.exports={
 				currentExperience = userO.speedXp;
 				currentLevel = userO.speedLevel;
 				level = currentLevel;
-				embed.setTitle('Training your Speed!').setDescription('Quick! Follow the instructions below!').setFooter('You have 10 seconds to type 3 words!');
+				embed.setTitle('Training your Speed!').setDescription(`<@${message.author.id}>, Quick! Follow the instructions below!`).setFooter('You have 10 seconds to type 3 words!');
 				let palavra = spdWords[Math.floor(Math.random()*spdWords.length)];
 
 				const filterSpd = m => m.author.id==message.author.id;
@@ -546,7 +546,7 @@ module.exports={
 				const collectorSpd = message.channel.createMessageCollector(filterSpd, { time: 10000, max: 3 });
 
 				let mSpd = await message.channel.send(embed)
-				message.channel.send(`Type \`${palavra}\``)
+				message.reply(`Type \`${palavra}\``)
 				let collectedAmountSpd = 0;
 
 				let collected=0;
@@ -555,25 +555,25 @@ module.exports={
 					collected++;
 					if(m.content == palavra){
 						collectedAmountSpd++;
-						message.channel.send("Correct!")
+						message.reply("Correct!")
 					}
 					else{
 						message.reply("wrong word!")
 					}
 					if(collected!=3){
 						palavra = spdWords[Math.floor(Math.random()*spdWords.length)];
-						message.channel.send("Now type `"+palavra+'`!');
+						message.reply("Now type `"+palavra+'`!');
 					}
 				});
 				
 				collectorSpd.on('end', collected => {
 					if(collectedAmountSpd == 0) {
-						message.channel.send("You didn't answer in time!");
+						message.reply("You didn't answer in time!");
 					}
 					else if(collectedAmountSpd != 3) {
-						message.channel.send("Time's Up!");
+						message.reply("Time's Up!");
 					}
-					message.channel.send(`You got ${collectedAmountSpd*2*userO.speedLevel} xp!`);
+					message.reply(`You got ${collectedAmountSpd*2*userO.speedLevel} xp!`);
 					currentExperience += collectedAmountSpd*2*userO.speedLevel;
 	
 					checkLevelUp('speed');			

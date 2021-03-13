@@ -1,0 +1,136 @@
+{
+	"default": {
+		"cost": 0,
+		"description": "descrição aki",
+		"type": "material/consumable/in fight",
+		"self_use": "can use in fight",
+		"effects_type": "attack/defense/max_hp/hp_boost/heal/none",
+		"effect_min_amount": 1,
+		"effect_max_amount": 1,
+		"effect_time": "miliseconds"
+	},
+
+	/*------------------Consumables------------------*/
+
+	/*----Potions----*/
+	"small_heal_potion": {
+		"cost": 5,
+		"description": "Heals around 10 hp",
+		"type": "consumable",
+		"self_use": false,
+		"effects_type": "heal",
+		"effect_min_amount": 5,
+		"effect_max_amount": 15,
+		"effect_time": 0
+	},
+	"medium_heal_potion": {
+		"cost": 10,
+		"description": "Heals around 20 hp",
+		"type": "consumable",
+		"self_use": false,
+		"effects_type": "heal",
+		"effect_min_amount": 15,
+		"effect_max_amount": 25,
+		"effect_time": 0
+	},
+	"big_heal_potion": {
+		"cost": 30,
+		"description": "Heals around 50 hp",
+		"type": "consumable",
+		"self_use": false,
+		"effects_type": "heal",
+		"effect_min_amount": 35,
+		"effect_max_amount": 65,
+		"effect_time": 0
+	},
+
+	"attack_potion": {//nah, mt OP
+		"cost": 100,
+		"description": "Attack x2",
+		"type": "consumable",
+		"self_use": false,
+		"effects_type": "attack",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 120000//20m
+	},
+	"defense_potion": {
+		"cost": 100,
+		"description": "Defense x2",
+		"type": "consumable",
+		"self_use": false,
+		"effects_type": "defense",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 120000//20m
+	},
+
+	/*------------------Materials------------------*/
+	/*----MobDrops----*/
+
+	/*----HourShop----*/
+
+	/*----FindItems----*/
+	"log": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "A wooden log.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+	"stone": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "A stone.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+	"iron": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "An iron ingot.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+	"gold": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "A gold ingot.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+	"diamond": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "A diamond ingot.",//??? kkkkk
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+	"": {
+		"cost": false,//not for sale, talvez no Hourly Shop
+		"description": "A diamond ingot.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	},
+
+}
+

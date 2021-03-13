@@ -25,19 +25,19 @@ module.exports={
 
 		const melee = new Discord.MessageEmbed()
 			.setTitle('Weapons')
-			.setDescription("Melee type, a high defense and and short range type. Now let's set up your weapon.\n\n1. Sword: +1 Speed and -1 Attack.\n2. Machete: +2 Attack and -2 Speed.\n3. Spear: +2 Range, -1 Defense and -1 Accuracy")
+			.setDescription("Melee type, a high defense and and short range one. Now let's set up your weapon.\n\n1. Sword: +1 Speed and -1 Attack.\n2. Machete: +2 Attack and -2 Speed.\n3. Spear: +2 Range, -1 Defense and -1 Accuracy")
 			.setFooter('You have 30 seconds to answer with a number!')
 			.setColor('#00ff00');
 
 		const ranged = new Discord.MessageEmbed()
 			.setTitle('Weapons')
-			.setDescription("Ranged type, a high range and short range type. Now let's set up your weapon.\n\n1. Bow: +1 Defense, +1 Range and -2 Attack.\n2. Slingshot: +2 Speed, -1 Attack and -1 Defense.\n3. Dart: +2 Speed, -1 Attack and -1 Accuracy")
+			.setDescription("Ranged type, a high range and short range one. Now let's set up your weapon.\n\n1. Bow: +1 Defense, +1 Range and -2 Attack.\n2. Slingshot: +2 Speed, -1 Attack and -1 Defense.\n3. Dart: +2 Speed, -1 Attack and -1 Accuracy")
 			.setFooter('You have 30 seconds to answer with a number!')
 			.setColor('#00ff00');
 		
 		const mage = new Discord.MessageEmbed()
 			.setTitle('Weapons')
-			.setDescription("Mage type, a very equilibrated type. Now let's set up your weapon.\n\n1. Magic Wand: +2 Speed and -2 Defense.\n2. Staff: +1 Range and -1 Speed.\n3. Magic Gloves: +2 Speed and -2 Range")
+			.setDescription("Mage type, a very equilibrated one. Now let's set up your weapon.\n\n1. Magic Wand: +2 Speed and -2 Defense.\n2. Staff: +1 Range and -1 Speed.\n3. Magic Gloves: +2 Speed and -2 Range")
 			.setFooter('You have 30 seconds to answer with a number!')
 			.setColor('#00ff00');
 
@@ -78,7 +78,6 @@ module.exports={
 			message.channel.send(character).then(async() => {
 				message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
 				var m = collected.first().content;
-					console.log('Collected')
 						if(!parseInt(m)||parseInt(m)<=0||parseInt(m)>3) {
 							cancelled = true;
 							return message.channel.send("Process cancelled, invalid answer provided");
@@ -90,8 +89,12 @@ module.exports={
 								message.channel.send(melee).then(async()=>{
 									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
+									console.log(m2);
 
-									if(!parseInt(m2))message.channel.send('invalid');
+									if(!parseInt(m2)||parseInt(m2)<=0||parseInt(m2)>3) return message.channel.send('Invalid answer provided');
+
+									console.log(m2);
+									
 									if(m2 == '1'){//sword/bow/magic wand
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as meelee type using a sword!")
 										console.log(`${message.author.id}/${message.author.username} joined`)
@@ -103,7 +106,13 @@ module.exports={
 										userO.accuracy = 8;
 										userO.range = 2;
 										userO.speed = 7;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										try{
+											await usersDb.set(`user - ${message.author.id}`, userO);
+										}
+										catch(e){
+											console.error(e);
+										}
+										console.log("Funfa aki");
 									}
 									else if(m2 == '2'){//machete/dart/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as meelee type using a machete!")
@@ -116,7 +125,7 @@ module.exports={
 										userO.accuracy = 8;
 										userO.range = 2;
 										userO.speed = 4;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//spear/slingshot/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as meelee type using a spear!")
@@ -129,7 +138,7 @@ module.exports={
 										userO.accuracy = 7;
 										userO.range = 4;
 										userO.speed = 3;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 
 									}).catch(collected => {
@@ -146,7 +155,7 @@ module.exports={
 									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
 
-									if(!parseInt(m2))message.channel.send('invalid');
+									if(!parseInt(m2)||parseInt(m2)<=0||parseInt(m2)>3) message.channel.send('Invalid answer provided');
 									if(m2 == '1'){//sword/bow/magic wand
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as ranged type using a Bow!")
 										console.log(`${message.author.id}/${message.author.username} joined`)
@@ -158,33 +167,33 @@ module.exports={
 										userO.accuracy = 4;
 										userO.range = 11;
 										userO.speed = 4;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '2'){//machete/slingshot/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as ranged type using Slingshot!")
 										console.log(`${message.author.id}/${message.author.username} joined`)
 										message.channel.send(embed)
 										userO.type = 'Ranged';
-										userO.weapon = 'Dart';
+										userO.weapon = 'Slingshot';
 										userO.attack = 5;
 										userO.defense = 5;
 										userO.accuracy = 4;
 										userO.range = 10;
 										userO.speed = 6;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//axe/dart/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as ranged type using a Dart!")
 										console.log(`${message.author.id}/${message.author.username} joined`)
 										message.channel.send(embed)
 										userO.type = 'Ranged';
-										userO.weapon = 'Slingshot';
+										userO.weapon = 'Dart';
 										userO.attack = 4;
 										userO.defense = 6;
 										userO.accuracy = 3;
 										userO.range = 10;
 										userO.speed = 6;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									}).catch(collected => {
 										if(collected.size == 0){
@@ -200,7 +209,7 @@ module.exports={
 									message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(async collected => {
 									let m2 = collected.first().content;
 
-									if(!parseInt(m2))message.channel.send('invalid');
+									if(!parseInt(m2)||parseInt(m2)<=0||parseInt(m2)>3) message.channel.send('Invalid answer provided');
 									if(m2 == '1'){//sword/bow/magic wand
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as mage type using a magic wand!")
 										console.log(`${message.author.id}/${message.author.username} joined`)
@@ -212,7 +221,7 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 8;
 										userO.speed = 4;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '2'){//machete/dart/staff
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as mage type using a staff!")
@@ -225,7 +234,7 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 9;
 										userO.speed = 1;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 									else if(m2 == '3'){//axe/slingshot/gloves
 										const embed = new Discord.MessageEmbed().setTitle("Character Set!").setDescription("Your character was set as mage type using a magic gloves!")
@@ -238,7 +247,7 @@ module.exports={
 										userO.accuracy = 6;
 										userO.range = 6;
 										userO.speed = 4;
-										await userDb.set(`user - ${message.author.id}`, userO);
+										await usersDb.set(`user - ${message.author.id}`, userO);
 									}
 
 									}).catch(async collected => {
@@ -255,8 +264,6 @@ module.exports={
 
 					else if(cancelled){return message.channel.send("Proccess Cancelled, invalid answer provided");}
 				})
-				if(!cancelled){}
-					await usersDb.set(`user - ${message.author.id}`, userO);
 				});
 
 			/*
