@@ -209,6 +209,61 @@ module.exports={
 
 		//speed train array
 		let spdWords = ['speed', 'fast', 'movement', 'type', 'word', 'quick', 'velocity', 'spd', 'rpg', 'move', 'speed'];
+		
+
+		/*attack and mind----------------------------------*/
+		let editReactXp = 0;
+		async function editReact(left, area, emoji){
+			embed.setTitle(`Training your ${area}!`)
+			.setDescription("Wait until the squares goes green then react the emoji below!\n\n🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥")
+			let msg = await message.channel.send(embed);
+			msg.react(emoji);
+			randomSec = Math.floor(Math.random()*3000) + 2000;
+
+			let canBeClicked = false;
+
+			let filter = (reaction, user) => {
+				return reaction.emoji.name === emoji && user.id === message.author.id;
+			};
+			let collector = msg.createReactionCollector(filter, {
+				time: randomSec+3000, max: 1,
+			});
+			let next = true;
+
+			collector.on('collect', async (reaction, user) => {
+				if(canBeClicked) editReactXp++;
+				else editReactXp--;
+				if(!left){
+					next = false;
+					let earnedXp = Math.max(editReactXp*2, 0)
+					message.channel.send(`You won ${earnedXp} XP!`);
+					currentExperience += earnedXp;
+					if(area == 'mind')
+						checkLevelUp();
+					else if(area == 'attack')
+						checkLevelUp('attack')
+				}
+			});
+
+			collector.on('end', collected => {
+				if(!collected.size){
+					message.channel.send("You didn't react the emoji in time! -1 XP!")
+
+				}
+				if(!canBeClicked) message.channel.send("You reacted the emoji too early! -1 XP!");
+				if(next){
+					left--;
+					editReact(left, area, emoji);
+				}
+			});
+			setTimeout(async function(){
+				if(await left == left){
+					msg.edit(embed.setDescription("Wait until the emoji goes green then react the emoji below!\n\n🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩"))
+					canBeClicked = true;
+				}
+			}, randomSec);
+		}
+
 
 		/*defense---------------------------------*/
 
@@ -282,120 +337,30 @@ module.exports={
 		//switch for trains
 		switch(args[0]){
 			case 'xp':
-				currentExperience = userO.xp;
-				currentLevel = userO.level;
-				level = currentLevel;
-
 				randXp = Math.floor(Math.random()*3);
 				if(randXp==0)
-						numberXp();
+					numberXp();
 				else if(randXp==1){
-					embed.setTitle('Training your Mind!').setDescription(`<@${message.author.id}>, Quick! React the :brain: emoji as many times as you can!`).setFooter('You have 5 seconds to react the emoji');
-
-					let filterMind = (reaction, user) => {
-						return reaction.emoji.name === '🧠' && user.id === message.author.id;
-					};
-
-					let mMind = await message.reply(embed)
-					mMind.react("🧠");
-					let collectedAmountMind = 0;
-					let collectorMind = mMind.createReactionCollector(filterMind, { time: 5000 });
-
-					collectorMind.on('collect', (reaction, user) => {
-						collectedAmountMind++;
-					});
-
-					collectorMind.on('end', collected => {
-						message.reply(`You got ${collectedAmountMind*userO.level} xp!`);
-						currentExperience += collectedAmountMind*userO.level;
-						checkLevelUp();
-					});
+					editReact(4, 'mind', '🧠');
 				}
 				else letterQuantityMind();
 			break;
 
 			case 'mind':
-				currentExperience = userO.xp;
-				currentLevel = userO.level;
-				level = currentLevel;
 				randXp = Math.floor(Math.random()*3);
 				if(randXp==0)
-						numberXp();
+					numberXp();
 				else if(randXp==1){
-					embed.setTitle('Training your Mind!').setDescription(`<@${message.author.id}>, Quick! React the :brain: emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
-
-					let filterMind = (reaction, user) => {
-						return reaction.emoji.name === '🧠' && user.id === message.author.id;
-					};
-
-					let mMind = await message.reply(embed)
-					mMind.react("🧠");
-					let collectedAmountMind = 0;
-					let collectorMind = mMind.createReactionCollector(filterMind, { time: 5000 });
-
-					collectorMind.on('collect', (reaction, user) => {
-						collectedAmountMind++;
-					});
-
-					collectorMind.on('end', collected => {
-						message.reply(`You got ${collectedAmountMind*userO.level} xp!`);
-						currentExperience += collectedAmountMind*userO.level;
-						checkLevelUp();
-					});
+					editReact(4, 'mind', '🧠');
 				}
 				else letterQuantityMind();
 			break;
 
 			case 'attack':
-				currentExperience = userO.attackXp;
-				currentLevel = userO.attackLevel;
-				level = currentLevel;
-				embed.setTitle('Training your Attack!').setDescription(`<@${message.author.id}>, Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
-
-				let filterAtk1 = (reaction, user) => {
-					return reaction.emoji.name === '⚔️' && user.id === message.author.id;
-				};
-
-				let mAtk1 = await message.reply(embed)
-				mAtk1.react("⚔️");
-				let collectedAmountAtk1 = 0;
-				let collectorAtk1 = mAtk1.createReactionCollector(filterAtk1, { time: 5000 });
-				
-				collectorAtk1.on('collect', (reaction, user) => {
-					collectedAmountAtk1++;
-				});
-				
-				collectorAtk1.on('end', collected => {
-					message.reply(`You got ${collectedAmountAtk1*userO.attackLevel} xp!`);
-					currentExperience += collectedAmountAtk1*userO.attackLevel;
-	
-					checkLevelUp('attack');			
-				});
+				editReact(4, 'attack', '⚔');
 			break;
 			case 'atk':
-				currentExperience = userO.attackXp;
-				currentLevel = userO.attackLevel;
-				level = currentLevel;
-				embed.setTitle('Training your Attack!').setDescription(`<@${message.author.id}>, Quick! React the ⚔️ emoji as many times as you can!').setFooter('You have 5 seconds to react the emoji`);
-				let filterAtk2 = (reaction, user) => {
-					return reaction.emoji.name === '⚔️' && user.id === message.author.id;
-				};
-
-				let mAtk2 = await message.reply(embed)
-				mAtk2.react("⚔️");
-				let collectedAmountAtk2 = 0;
-				let collectorAtk2 = mAtk2.createReactionCollector(filterAtk2, { time: 5000 });
-				
-				collectorAtk2.on('collect', (reaction, user) => {
-					collectedAmountAtk2++;
-				});
-				
-				collectorAtk2.on('end', collected => {
-					message.reply(`You got ${collectedAmountAtk2*userO.attackLevel} xp!`);
-					currentExperience += collectedAmountAtk2*userO.attackLevel;
-	
-					checkLevelUp('attack');			
-				});
+				editReact(4, 'attack', '⚔');
 			break;
 
 			case 'defense':
@@ -507,7 +472,7 @@ module.exports={
 				
 				collectorSpeed.on('collect', (m, user) => {
 					collected1++;
-					if(m.content == palavra1){
+					if(m.content.toLowerCase() == palavra1){
 						collectedAmountSpeed++;
 						message.reply("Correct!")
 					}
@@ -553,7 +518,7 @@ module.exports={
 				
 				collectorSpd.on('collect', (m, user) => {
 					collected++;
-					if(m.content == palavra){
+					if(m.content.toLowerCase() == palavra){
 						collectedAmountSpd++;
 						message.reply("Correct!")
 					}

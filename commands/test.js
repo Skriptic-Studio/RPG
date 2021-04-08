@@ -14,9 +14,44 @@ module.exports={
 			const usersDb = new Keyv("sqlite://./databases/users.sqlite");
 			var embed = new Discord.MessageEmbed().setColor("#FF0000");
 
-			function fight(user){
-				embed.setDescription(`It's ${user}'s turn!`)
-				message.channel.send(embed);
+			let map = [['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲'],
+								 ['🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲','🔲']];
+			let stringMap = (map) => {
+				let map1=[];
+				for(let i = 0; i<map.length;i++){
+					map1[i]=map[i].join("");
+				}
+				return map1.join("\n");
+			}
+			
+			function fight(user, next){
+				const filter1 = response => {return response.author.id == user.id};
+				embed.setDescription(`It's ${user}'s turn!\n${stringMap(map)}`);
+				message.channel.send(embed).then(() => {
+					message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] })
+						.then(collected => {
+							message.channel.send(`${collected.first().content}`);
+							try{
+								fight(next, user);
+							}
+							catch(e){
+								console.error(e)
+							};
+						})
+						.catch(collected => {
+							if(collected.size==0){
+								return message.channel.send(`${user.username} didn't answer in time! ${next.username} won the game!`);
+							}
+							
+					});
+				});
 			}
 
 			if(!message.mentions.users.size){
@@ -56,7 +91,7 @@ module.exports={
 					
 					embed.setTitle(fightUsers).setDescription("Let the fight begin!").setColor("#0000FF");
 					message.channel.send(embed);
-					fight(message.author);
+					fight(message.author, target);
 				}
 				else if(collected.first().content.toLowerCase()=='n'||collected.first().content.toLowerCase()=='no'){
 					embed.setTitle(`${target.username} rejected your fight request!`).setColor("#FF0000");
