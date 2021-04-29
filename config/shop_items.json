@@ -1,0 +1,77 @@
+{
+	"default": {
+		"id": 0,
+		"name": "Default",
+		"cost": 0,
+		"description": "default",
+		"chance_appear": 0,
+		"rarity": "none"
+	},
+
+	"small_healing_potion": {
+		"id": 1,
+		"name": "Small Healing Potion",
+		"cost": 10,
+		"description": "Heals 20 hp",
+		"chance_appear": 90,
+		"rarity": "commom"
+	},
+	"normal_healing_potion": {
+		"id": 2,
+		"name": "Normal Healing Potion",
+		"cost": 20,
+		"description": "Heals 50 hp",
+		"chance_appear": 70,
+		"rarity": "uncommon"
+	},
+	"big_healing_potion": {
+		"id": 3,
+		"name": "Big Healing Potion",
+		"cost": 30,
+		"description": "Heals 100 hp",
+		"chance_appear": 30,
+		"rarity": "uncommon"
+	},
+
+	"instant_small_healing_potion": {
+		"id": 4,
+		"name": "Instant Small Healing Potion",
+		"cost": 10,
+		"description": "Heals 20 hp instantly",
+		"chance_appear": 90,
+		"rarity": "common"
+	},
+	"instant_normal_healing_potion": {
+		"id": 5,
+		"name": "Instant Normal Healing Potion",
+		"cost": 20,
+		"description": "Heals 50 hp instantly",
+		"chance_appear": 70,
+		"rarity": "uncommon"
+	},
+	"instant_big_healing_potion": {
+		"id": 6,
+		"name": "Instant Big Healing Potion",
+		"cost": 30,
+		"description": "Heals 100 hp instantly",
+		"chance_appear": 30,
+		"rarity": "uncommon"
+	},
+
+	"poison_potion": {
+		"id": 7,
+		"name": "Poison Potion",
+		"cost": 50,
+		"description": "Poison enemy for 5 rounds dealing 10 in each one",
+		"chance_appear": 60,
+		"rarity": "rare"
+	},
+	"big_poison_potion": {
+		"id": 8,
+		"name": "Big Poison Potion",
+		"cost": 100,
+		"description": "Poison enemy for 7 rounds dealing 20 in each one",
+		"chance_appear": 20,
+		"rarity": "exotic"
+	}
+}

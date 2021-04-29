@@ -13,10 +13,6 @@ app.get("/404", (req, res) => {
     res.render("404")
 })
 
-app.post('/test', function(req, res, next){
-   res.send('got it!');
-});
-
 app.use(function(req, res, next){
   res.status(404);
 	res.redirect('404')

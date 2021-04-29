@@ -21,15 +21,17 @@ module.exports={
 
 		//level up support vars
 		let currentExperience = 0;
-		let currentLevel;
-		let level;
+		let currentLevel = 0;
+		let level = 0;
 
 		//level up and modify database
 		async function checkLevelUp(area) {
-			if(area == undefined) 
-				experienceToLevelUp = Math.pow(userO.level*2, 2);
-			else 
-				experienceToLevelUp = Math.pow(userO[`${area}Level`]*2, 2);
+			if(area == undefined){
+				experienceToLevelUp = Math.pow(userO.level, 2);
+			}
+			else{
+				experienceToLevelUp = Math.pow(userO[`${area}Level`], 2);
+			}
 			if(currentExperience > experienceToLevelUp) {
 				level++;
 				currentExperience -= experienceToLevelUp;
@@ -153,8 +155,9 @@ module.exports={
 			let collector = message.channel.createMessageCollector(filter, { time: 10000, max: 1 });
 			collector.on('collect', m => {
 				if(m.content==correctNum.join(" ")){
-					message.reply(`Correct!\n You got ${6*userO.level}xp!`);
-					currentExperience += 6*userO.level;
+					let earnedXp = (userO.level^(2/3))*2;
+					message.reply(`Correct!\n You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 					checkLevelUp();
 				}
 				else{
@@ -194,11 +197,12 @@ module.exports={
 			letterQuantityMindCollector.on('end', collected => {
 				if(!collected.size){
 					message.reply("You didn't answer in time!")
-					message.reply("You got 0xp!");
+					message.reply("You got 0 xp!");
 				}
 				if(correct) {
-					message.reply(`You got ${3*2*userO.level} xp!`);
-					currentExperience += 3*2*userO.level;
+					let earnedXp = (userO.level^(2/3))*2;
+					message.reply(`You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 					checkLevelUp();
 				}
 				else message.reply("You got 0 xp!");
@@ -235,13 +239,17 @@ module.exports={
 				else editReactXp--;
 				if(!left){
 					next = false;
-					let earnedXp = Math.max(editReactXp*2, 0)
-					message.channel.send(`You won ${earnedXp} XP!`);
-					currentExperience += earnedXp;
-					if(area == 'mind')
+					if(area == 'mind') {
+						let earnedXp = Math.max(editReactXp/3*(userO.level^(2/3))*2, 0)
+						currentExperience += earnedXp;
 						checkLevelUp();
-					else if(area == 'attack')
+					}
+					else if(area == 'attack') {
+						let earnedXp = Math.max(editReactXp/3*(userO.attackLevel^(2/3))*2, 0)
+						currentExperience += earnedXp;
 						checkLevelUp('attack')
+					}
+					message.channel.send(`You won ${earnedXp.toFixed(2)} XP!`);
 				}
 			});
 
@@ -276,7 +284,7 @@ module.exports={
 			map[ePos] = '👾';
 			embed.setTitle('Training your Defense!').setDescription(`<@${message.author.id}>, Answer with the position(Left/Right/Middle) the enemy(👾) to defend it!\n\n${map.join("")}`).setFooter(`${left} defense left!`);
 			message.reply(embed).then(async() => {
-				message.channel.awaitMessages(filter, { max: 1, time: 3000, errors: ['time'] }).then(collected => {
+				message.channel.awaitMessages(filter, { max: 1, time: 4000, errors: ['time'] }).then(collected => {
 
 				if(collected.first().content==ePosStr)
 					message.reply("You defended!");
@@ -284,10 +292,12 @@ module.exports={
 
 				if(left>1)
 					def(left-1);
-				else if(left==1)
-					message.reply(`You won ${6*userO.level+1}xp!`);
-					currentExperience += 6*userO.level+1;
+				else if(left==1) {
+					let earnedXp = (userO.defenseLevel^(2/3))*2;
+					message.reply(`You won ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 					checkLevelUp('defense');
+				}
 			}).catch(collected => {
 				if(collected.size==0)
 					return message.reply(`You didn't answer in time and the enemy got you!`);
@@ -302,6 +312,7 @@ module.exports={
 		function range(left){
 			let filter = m => m.author.id == message.author.id;
 			hyp = Math.ceil(Math.random()*10);
+			rangeWonXp = 0;
 			correct = '';
 			embed.setTitle('Training your Range!').setDescription(`<@${message.author.id}>, Type hyphen(-) ${hyp} times and then add a greater than(>) symbol after it!`);
 
@@ -311,7 +322,7 @@ module.exports={
 			correct+='>';
 
 			message.reply(embed).then(async() => {
-				message.channel.awaitMessages(filter, { max: 1, time: 3000, errors: ['time'] }).then(collected => {
+				message.channel.awaitMessages(filter, { max: 1, time: 7000, errors: ['time'] }).then(collected => {
 
 				if(collected.first().content==correct){
 					message.reply("You got it!");
@@ -321,10 +332,12 @@ module.exports={
 
 				if(left>1) range(left-1);
 				
-				else if(left==1)
-					message.reply(`You won ${rangeWonXp}xp!`);
-					currentExperience += rangeWonXp;
+				else if(left==1) {
+				  let earnedXp = rangeWonXp/3*(userO.rangeLevel^(2/3))*2;
+					message.reply(`You won ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 					checkLevelUp('range');
+				}
 			}).catch(collected => {
 				if(collected.size==0)
 					return message.reply(`You didn't answer in time!`);
@@ -347,6 +360,9 @@ module.exports={
 			break;
 
 			case 'mind':
+				currentExperience = userO.xp;
+				currentLevel = userO.level;
+				level = currentLevel;
 				randXp = Math.floor(Math.random()*3);
 				if(randXp==0)
 					numberXp();
@@ -357,9 +373,15 @@ module.exports={
 			break;
 
 			case 'attack':
+				currentExperience = userO.attackXp;
+				currentLevel = userO.attackLevel;
+				level = currentLevel;
 				editReact(4, 'attack', '⚔');
 			break;
 			case 'atk':
+				currentExperience = userO.attackXp;
+				currentLevel = userO.attackLevel;
+				level = currentLevel;
 				editReact(4, 'attack', '⚔');
 			break;
 
@@ -379,6 +401,7 @@ module.exports={
 				currentExperience = userO.accuracyXp;
 				currentLevel = userO.accuracyLevel;
 				level = currentLevel;
+				accCollectedAmount = 0;
 				const filterAccuracy = m => m.author.id==message.author.id;
 				const collectorAccuracy = message.channel.createMessageCollector(filterAccuracy, { time: 10000, max: 3 });
 
@@ -402,13 +425,14 @@ module.exports={
 					if(accCollectedAmount == 0) {
 						message.reply("You didn't answer in time!");
 					}
-					else if(accCollectedAmount != '3') {
+					else if(accRounds != '3') {
 						message.reply("Time's Up!");
 					}
 					accRabbitNumber = null;
 					accRounds = 0;
-					message.reply(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
-					currentExperience += accCollectedAmount*2*userO.accuracyLevel;
+					let earnedXp = accCollectedAmount/3*(userO.accuracyLevel^(2/3))*2;
+					message.reply(`You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 	
 					checkLevelUp('accuracy');		
 				});
@@ -418,6 +442,7 @@ module.exports={
 				currentExperience = userO.accuracyXp;
 				currentLevel = userO.accuracyLevel;
 				level = currentLevel;
+				accCollectedAmount = 0;
 				const filterAcc = m => m.author.id==message.author.id;
 				const collectorAcc = message.channel.createMessageCollector(filterAcc, { time: 10000, max: 3 });
 
@@ -441,13 +466,14 @@ module.exports={
 					if(accCollectedAmount == 0) {
 						message.reply("You didn't answer in time!");
 					}
-					else if(accCollectedAmount != 3) {
+					else if(accRounds != 3) {
 						message.reply("Time's Up!");
 					}
 					accRabbitNumber = null;
 					accRounds = 0;
-					message.reply(`You got ${accCollectedAmount*2*userO.accuracyLevel} xp!`);
-					currentExperience += accCollectedAmount*2*userO.accuracyLevel;
+					let earnedXp = accCollectedAmount/3*(userO.accuracyLevel^(2/3))*2;
+					message.reply(`You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 	
 					checkLevelUp('accuracy');
 				});
@@ -492,8 +518,9 @@ module.exports={
 					else if(collectedAmountSpeed != 3) {
 						message.reply("Time's Up!");
 					}
-					message.reply(`You got ${collectedAmountSpeed*2*userO.speedLevel} xp!`);
-					currentExperience += collectedAmountSpeed*2*userO.speedLevel;
+					let earnedXp = collectedAmountSpeed/3*(userO.speedLevel^(2/3))*2;
+					message.reply(`You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 	
 					checkLevelUp('speed');			
 				});
@@ -538,8 +565,9 @@ module.exports={
 					else if(collectedAmountSpd != 3) {
 						message.reply("Time's Up!");
 					}
-					message.reply(`You got ${collectedAmountSpd*2*userO.speedLevel} xp!`);
-					currentExperience += collectedAmountSpd*2*userO.speedLevel;
+					let earnedXp = collectedAmountSpd/3*(userO.speedLevel^(2/3))*2;
+					message.reply(`You got ${earnedXp.toFixed(2)} xp!`);
+					currentExperience += earnedXp;
 	
 					checkLevelUp('speed');			
 				});

@@ -1,0 +1,5 @@
+{
+	"xpToLevelUp": "level^2*2",
+	"earnedXp": "(level^(2/3))",
+	"coisoFinal": "carinha*level*0.2",
+}

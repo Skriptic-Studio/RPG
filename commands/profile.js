@@ -50,7 +50,7 @@ module.exports={
 		}
 
 		let formula = (area, areaLevel) => {
-			return (area*(Math.pow(areaLevel, 1.5))).toFixed(2);
+			return (area*(areaLevel+1)*0.2).toFixed(2);
 		}
 
 		let embed = new Discord.MessageEmbed()

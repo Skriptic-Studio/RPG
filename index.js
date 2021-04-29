@@ -6,6 +6,7 @@ const Keyv = require('keyv');
 const db = new Keyv('sqlite://./databases/main.sqlite');
 const userDb = new Keyv('sqlite://./databases/users.sqlite');
 const cooldown = new Keyv('sqlite://./databases/cooldown.sqlite');
+const shop = new Keyv('sqlite://./databases/shop.sqlite')
 
 const { checkmark, crossmark, warning, loading, tool } = require('./config/thumbnail.json');
 
@@ -13,6 +14,9 @@ const { ownerID, tester } = require('./config/main.json');
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+var items = require("./config/shop_items.json");
+let keys = Object.keys(items);
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -22,11 +26,83 @@ for (const file of commandFiles) {
 client.once('ready', () => {
 	console.log('Ready!');
 	client.user.setActivity("r.help | People level up.", { type: "WATCHING" });
+	setInterval(async () => {
+		let randomItem;
+		let chance;
+
+		let common1 = " ", common2 = " ", common_uncommon = " ", uncommon_rare1 = " ", uncommon_rare2 = " ", rare_exotic_legendary = " ";
+
+		while (true) {
+			randomItem = items[keys[Math.floor(Math.random()*keys.length)]];
+			chance = Math.floor(Math.random() * 100);
+			if(randomItem.chance_appear <= chance) {
+				if(randomItem.rarity == "common" && (common1 == " " || common2 == " " || common_uncommon == " ")) {
+					if(common1 == " ") {common1 = randomItem}
+					else {
+						if(common2 == " ") {common2 = randomItem}
+						else {
+							if(common_uncommon == " ") {common_uncommon = randomItem}
+						}
+					}
+				}
+
+				else if(randomItem.rarity == "uncommon" && (uncommon_rare1 == " " || uncommon_rare2 == " " || common_uncommon == " ")) {
+					if(uncommon_rare1 == " ") uncommon_rare1 = randomItem
+					else {
+						if(uncommon_rare2 == " ") uncommon_rare2 = randomItem
+						else {
+							if(common_uncommon == " ") common_uncommon = randomItem
+						}
+					}
+				}
+
+				else if(randomItem.rarity == "rare" && (uncommon_rare1 == " " || uncommon_rare2 == " " || rare_exotic_legendary == " ")) {
+					if(uncommon_rare1 == " ") uncommon_rare1 = randomItem
+					else {
+						if(uncommon_rare2 == " ") uncommon_rare2 = randomItem
+						else {
+							if(rare_exotic_legendary == " ") rare_exotic_legendary = randomItem
+						}
+					}
+				}
+
+				else if(randomItem.rarity == "exotic" && rare_exotic_legendary == " ") {
+					rare_exotic_legendary = randomItem;
+				}
+
+				else if(randomItem.rarity == "legendary" && rare_exotic_legendary == " ") {
+					rare_exotic_legendary = randomItem;	
+				}
+			}
+
+			if(common1 == " " || common2 == " " || common_uncommon == " " || uncommon_rare1 == " " || uncommon_rare2 == " " || rare_exotic_legendary == " ") {
+			}
+			else {
+				break;
+			}
+		}
+
+		await shop.set('common1', common1);
+		await shop.set('common2', common2);
+		await shop.set('common_uncommon', common_uncommon);
+		await shop.set('uncommon_rare1', uncommon_rare1);
+		await shop.set('uncommon_rare2', uncommon_rare2);
+		await shop.set('rare_exotic_legendary', rare_exotic_legendary);
+		await shop.set('max1', 5);
+		await shop.set('max2', 5);
+		await shop.set('max3', 5);
+		await shop.set('max4', 5);
+		await shop.set('max5', 5);
+		await shop.set('max6', 5);
+
+		console.log("Shop atualizado!");
+	}, 7200000)
+	//}, 5000)
 });
 
 client.on("guildCreate", async guild => {
 	console.log("Joined a new guild: " + guild.name);
-	await db.set(`prefix - ${message.guild.id}`, 'r.');
+	await db.set(`prefix - ${guild.id}`, 'r.');
 })
 
 
@@ -41,7 +117,7 @@ client.on('message', async message => {
 			.setTitle("You pinged me!")
 			.setDescription("My prefix is " + prefix)
 			.setColor("#0000ff");
-		return message.channel.send(embed)
+		return message.channel.send(embed).catch(function(){})
 	};
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -157,8 +233,11 @@ client.on('message', async message => {
 			.setDescription('There was an error executing that command!')
 			.setColor('#ff0000')
 			.setThumbnail(crossmark);
-		message.channel.send(embed);
+		message.channel.send(embed).catch(function(){});
 	}
+
+
+	
 });
 
 client.login(process.env.DISCORD_TOKEN);

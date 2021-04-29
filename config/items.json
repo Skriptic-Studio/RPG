@@ -1,78 +1,138 @@
 {
 	"default": {
-		"cost": 0,
-		"description": "descrição aki",
-		"type": "material/consumable/in fight",
-		"self_use": "can use in fight",
-		"effects_type": "attack/defense/max_hp/hp_boost/heal/none",
-		"effect_min_amount": 1,
-		"effect_max_amount": 1,
-		"effect_time": "miliseconds"
+		"id": 0,
+		"description": "default",
+		"consumable": false,
+		"succed_effect": "none",
+		"succed_effect_amount": 0,
+		"succed_effect_rounds": 0,
+		"fail_effect": "none",
+		"fail_effect_amount": 0,
+		"fail_effect_rounds": 0,
+		"chance": 0,
+		"used_on_fight": false
 	},
 
-	/*------------------Consumables------------------*/
 
-	/*----Potions----*/
-	"small_heal_potion": {
-		"cost": 5,
-		"description": "Heals around 10 hp",
-		"type": "consumable",
-		"self_use": false,
-		"effects_type": "heal",
-		"effect_min_amount": 5,
-		"effect_max_amount": 15,
-		"effect_time": 0
-	},
-	"medium_heal_potion": {
+	"small_healing_potion": {
+		"id": 1,
 		"cost": 10,
-		"description": "Heals around 20 hp",
-		"type": "consumable",
-		"self_use": false,
-		"effects_type": "heal",
-		"effect_min_amount": 15,
-		"effect_max_amount": 25,
-		"effect_time": 0
+		"description": "Heals 20 hp",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 20,
+		"succed_effect_rounds": 0,
+		"fail_effect": "none",
+		"fail_effect_amount": 0,
+		"fail_effect_rounds": 0,
+		"chance": 99,
+		"used_on_fight": false
 	},
-	"big_heal_potion": {
+	"normal_healing_potion": {
+		"id": 2,
+		"cost": 20,
+		"description": "Heals 50 hp",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 50,
+		"succed_effect_rounds": 0,
+		"fail_effect": "heal",
+		"fail_effect_amount": -10,
+		"fail_effect_rounds": 0,
+		"chance": 85,
+		"used_on_fight": false
+	},
+	"big_healing_potion": {
+		"id": 3,
 		"cost": 30,
-		"description": "Heals around 50 hp",
-		"type": "consumable",
-		"self_use": false,
-		"effects_type": "heal",
-		"effect_min_amount": 35,
-		"effect_max_amount": 65,
-		"effect_time": 0
+		"description": "Heals 100 hp",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 100,
+		"succed_effect_rounds": 0,
+		"fail_effect": "heal",
+		"fail_effect_amount": -20,
+		"fail_effect_rounds": 0,
+		"chance": 80,
+		"used_on_fight": false
 	},
 
-	"attack_potion": {//nah, mt OP
+	"instant_small_healing_potion": {
+		"id": 4,
+		"cost": 10,
+		"description": "Heals 20 hp instantly",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 20,
+		"succed_effect_rounds": 1,
+		"fail_effect": "none",
+		"fail_effect_amount": 0,
+		"fail_effect_rounds": 1,
+		"chance": 90,
+		"used_on_fight": true
+	},
+	"instant_normal_healing_potion": {
+		"id": 5,
+		"cost": 20,
+		"description": "Heals 50 hp instantly",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 50,
+		"succed_effect_rounds": 1,
+		"fail_effect": "heal",
+		"fail_effect_amount": -10,
+		"fail_effect_rounds": 1,
+		"chance": 85,
+		"used_on_fight": true
+	},
+	"instant_big_healing_potion": {
+		"id": 6,
+		"cost": 30,
+		"description": "Heals 100 hp instantly",
+		"consumable": true,
+		"succed_effect": "heal",
+		"succed_effect_amount": 100,
+		"succed_effect_rounds": 1,
+		"fail_effect": "heal",
+		"fail_effect_amount": -20,
+		"fail_effect_rounds": 1,
+		"chance": 80,
+		"used_on_fight": true
+	},
+
+	"poison_potion": {
+		"id": 7,
+		"cost": 50,
+		"description": "Poison enemy for 5 rounds dealing 10 in each one",
+		"consumable": true,
+		"succed_effect": "poison",
+		"succed_effect_amount": 10,
+		"succed_effect_rounds": 5,
+		"fail_effect": "poison",
+		"fail_effect_amount": -5,
+		"fail_effect_rounds": 3,
+		"chance": 80,
+		"used_on_fight": true
+	},
+	"big_poison_potion": {
+		"id": 8,
 		"cost": 100,
-		"description": "Attack x2",
-		"type": "consumable",
-		"self_use": false,
-		"effects_type": "attack",
-		"effect_min_amount": 0,
-		"effect_max_amount": 0,
-		"effect_time": 120000//20m
-	},
-	"defense_potion": {
-		"cost": 100,
-		"description": "Defense x2",
-		"type": "consumable",
-		"self_use": false,
-		"effects_type": "defense",
-		"effect_min_amount": 0,
-		"effect_max_amount": 0,
-		"effect_time": 120000//20m
+		"description": "Poison enemy for 7 rounds dealing 20 in each one",
+		"consumable": true,
+		"succed_effect": "poison",
+		"succed_effect_amount": 20,
+		"succed_effect_rounds": 7,
+		"fail_effect": "poison",
+		"fail_effect_amount": -5,
+		"fail_effect_rounds": 5,
+		"chance": 85,
+		"used_on_fight": true
 	},
 
-	/*------------------Materials------------------*/
-	/*----MobDrops----*/
 
-	/*----HourShop----*/
 
-	/*----FindItems----*/
 	"log": {
-		"cost": false,//not for sale, talvez no Hourly Shop
+		"cost": false,
 		"description": "A wooden log.",
 		"type": "material",
 		"self_use": false,
@@ -82,7 +142,7 @@
 		"effect_time": 0
 	},
 	"stone": {
-		"cost": false,//not for sale, talvez no Hourly Shop
+		"cost": false,
 		"description": "A stone.",
 		"type": "material",
 		"self_use": false,
@@ -92,7 +152,7 @@
 		"effect_time": 0
 	},
 	"iron": {
-		"cost": false,//not for sale, talvez no Hourly Shop
+		"cost": false,
 		"description": "An iron ingot.",
 		"type": "material",
 		"self_use": false,
@@ -102,7 +162,7 @@
 		"effect_time": 0
 	},
 	"gold": {
-		"cost": false,//not for sale, talvez no Hourly Shop
+		"cost": false,
 		"description": "A gold ingot.",
 		"type": "material",
 		"self_use": false,
@@ -112,17 +172,7 @@
 		"effect_time": 0
 	},
 	"diamond": {
-		"cost": false,//not for sale, talvez no Hourly Shop
-		"description": "A diamond ingot.",//??? kkkkk
-		"type": "material",
-		"self_use": false,
-		"effects_type": "none",
-		"effect_min_amount": 0,
-		"effect_max_amount": 0,
-		"effect_time": 0
-	},
-	"": {
-		"cost": false,//not for sale, talvez no Hourly Shop
+		"cost": false,
 		"description": "A diamond ingot.",
 		"type": "material",
 		"self_use": false,
@@ -131,6 +181,16 @@
 		"effect_max_amount": 0,
 		"effect_time": 0
 	},
+	"a": {
+		"cost": false,
+		"description": "A diamond ingot.",
+		"type": "material",
+		"self_use": false,
+		"effects_type": "none",
+		"effect_min_amount": 0,
+		"effect_max_amount": 0,
+		"effect_time": 0
+	}
 
 }
 
